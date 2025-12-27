@@ -82,10 +82,10 @@ body {
 }
 
 .credit {
-  position: absolute;
   bottom: 25px;
   width: 100%;
   text-align: center;
-  font-size: 11px;
+  font-size: 110px;
   color: #777;
 }
+
