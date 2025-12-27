@@ -3,41 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Calculator</title>
     <link rel="stylesheet" href="style.css" />
     <script src="jQuery_3.7.1.js"></script>
   </head>
   <body>
     <div class="iphone">
       <div class="dynamic-island"></div>
+
       <div class="calculator">
         <div class="display">0</div>
+
         <div class="buttons">
           <button class="btn lightGrey">AC</button>
           <button class="btn lightGrey">±</button>
           <button class="btn lightGrey">%</button>
           <button class="btn orange">÷</button>
+
           <button class="btn darkGrey">7</button>
           <button class="btn darkGrey">8</button>
           <button class="btn darkGrey">9</button>
           <button class="btn orange">x</button>
+
           <button class="btn darkGrey">4</button>
           <button class="btn darkGrey">5</button>
           <button class="btn darkGrey">6</button>
           <button class="btn orange">-</button>
+
           <button class="btn darkGrey">1</button>
           <button class="btn darkGrey">2</button>
           <button class="btn darkGrey">3</button>
           <button class="btn orange">+</button>
+
           <button class="btn darkGrey zero">0</button>
-          <button class="btn darkGrey zero">00</button>
+          <button class="btn darkGrey">00</button>
           <button class="btn darkGrey">.</button>
           <button class="btn orange">=</button>
         </div>
       </div>
 
+      <div class="credit">
+        Calculator built & designed by <strong>Sem Bunly</strong>
+      </div>
+
       <div class="home-bar"></div>
     </div>
+
     <script>
       $(document).ready(function () {
         let currentInput = "";
@@ -79,61 +90,17 @@
             }
           } else if (value === "%") {
             if (currentInput !== "") {
-              if (previousInput !== "" && operator !== "") {
-                currentInput = (
-                  (parseFloat(previousInput) * parseFloat(currentInput)) /
-                  100
-                ).toString();
-              } else {
-                currentInput = (parseFloat(currentInput) / 100).toString();
-              }
+              currentInput = (parseFloat(currentInput) / 100).toString();
               updateDisplay();
             }
-          } else if (
-            value === "+" ||
-            value === "-" ||
-            value === "x" ||
-            value === "÷"
-          ) {
+          } else if (["+", "-", "x", "÷"].includes(value)) {
             if (currentInput === "") return;
-
-            if (previousInput !== "" && operator !== "") {
-              let num1 = parseFloat(previousInput);
-              let num2 = parseFloat(currentInput);
-              let result = 0;
-
-              switch (operator) {
-                case "+":
-                  result = num1 + num2;
-                  break;
-                case "-":
-                  result = num1 - num2;
-                  break;
-                case "x":
-                  result = num1 * num2;
-                  break;
-                case "÷":
-                  result = num2 !== 0 ? num1 / num2 : "Error";
-                  break;
-              }
-
-              if (result !== "Error") {
-                result = parseFloat(result.toFixed(2));
-              }
-
-              previousInput = result.toString();
-              currentInput = "";
-              operator = value;
-              $(".display").text(previousInput + " " + operator);
-            } else {
-              operator = value;
-              previousInput = currentInput;
-              currentInput = "";
-              updateDisplay();
-            }
+            operator = value;
+            previousInput = currentInput;
+            currentInput = "";
+            updateDisplay();
           } else if (value === "=") {
-            if (currentInput === "" || previousInput === "" || operator === "")
-              return;
+            if (currentInput === "" || previousInput === "") return;
             let result = 0;
             let num1 = parseFloat(previousInput);
             let num2 = parseFloat(currentInput);
@@ -151,10 +118,6 @@
               case "÷":
                 result = num2 !== 0 ? num1 / num2 : "Error";
                 break;
-            }
-
-            if (result !== "Error") {
-              result = parseFloat(result.toFixed(2));
             }
 
             $(".display").text(result);
