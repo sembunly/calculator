@@ -56,12 +56,21 @@
       let resultDisplayed = false;
 
       function updateDisplay() {
-        $(".display").text(currentInput || previousInput || "0");
+        if (previousInput && operator && currentInput) {
+          $(".display").text(previousInput + " " + operator + " " + currentInput);
+        } else if (previousInput && operator) {
+          $(".display").text(previousInput + " " + operator);
+        } else if (currentInput) {
+          $(".display").text(currentInput);
+        } else {
+          $(".display").text("0");
+        }
       }
 
       $(".btn").click(function () {
         let value = $(this).text();
 
+        // numbers & dot
         if (!isNaN(value) || value === ".") {
           if (resultDisplayed) {
             currentInput = "";
@@ -69,30 +78,62 @@
           }
           currentInput += value;
           updateDisplay();
-        } else if (value === "AC") {
+        }
+
+        // clear
+        else if (value === "AC") {
           currentInput = "";
           previousInput = "";
           operator = "";
+          resultDisplayed = false;
           updateDisplay();
-        } else if (["+", "-", "x", "÷"].includes(value)) {
-          previousInput = currentInput;
+        }
+
+        // plus/minus
+        else if (value === "±") {
+          if (currentInput) {
+            currentInput = (parseFloat(currentInput) * -1).toString();
+            updateDisplay();
+          }
+        }
+
+        // percent
+        else if (value === "%") {
+          if (currentInput) {
+            currentInput = (parseFloat(currentInput) / 100).toString();
+            updateDisplay();
+          }
+        }
+
+        // operators
+        else if (["+", "-", "x", "÷"].includes(value)) {
+          if (!currentInput) return;
           operator = value;
+          previousInput = currentInput;
           currentInput = "";
-        } else if (value === "=") {
+          updateDisplay();
+        }
+
+        // equal
+        else if (value === "=") {
+          if (!currentInput || !previousInput || !operator) return;
+
           let a = parseFloat(previousInput);
           let b = parseFloat(currentInput);
           let r = 0;
 
-          if (operator === "+") r = a + b;
-          if (operator === "-") r = a - b;
-          if (operator === "x") r = a * b;
-          if (operator === "÷") r = b !== 0 ? a / b : "Error";
+          switch (operator) {
+            case "+": r = a + b; break;
+            case "-": r = a - b; break;
+            case "x": r = a * b; break;
+            case "÷": r = b !== 0 ? a / b : "Error"; break;
+          }
 
+          $(".display").text(r);
           currentInput = r.toString();
           previousInput = "";
           operator = "";
           resultDisplayed = true;
-          updateDisplay();
         }
       });
     });
