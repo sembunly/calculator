@@ -1,133 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculator</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="jQuery_3.7.1.js"></script>
-  </head>
-  <body>
-      <div class="credit">
-        Calculator built & designed by <strong>Sem Bunly</strong>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="jQuery_3.7.1.js"></script>
+</head>
+<body>
+  <div class="iphone">
+    <div class="dynamic-island"></div>
+
+    <div class="calculator">
+      <div class="display">0</div>
+
+      <div class="buttons">
+        <button class="btn lightGrey">AC</button>
+        <button class="btn lightGrey">±</button>
+        <button class="btn lightGrey">%</button>
+        <button class="btn orange">÷</button>
+
+        <button class="btn darkGrey">7</button>
+        <button class="btn darkGrey">8</button>
+        <button class="btn darkGrey">9</button>
+        <button class="btn orange">x</button>
+
+        <button class="btn darkGrey">4</button>
+        <button class="btn darkGrey">5</button>
+        <button class="btn darkGrey">6</button>
+        <button class="btn orange">-</button>
+
+        <button class="btn darkGrey">1</button>
+        <button class="btn darkGrey">2</button>
+        <button class="btn darkGrey">3</button>
+        <button class="btn orange">+</button>
+
+        <button class="btn darkGrey zero">0</button>
+        <button class="btn darkGrey">.</button>
+        <button class="btn orange">=</button>
       </div>
-    <div class="iphone">
-      <div class="dynamic-island"></div>
-
-      <div class="calculator">
-        <div class="display">0</div>
-
-        <div class="buttons">
-          <button class="btn lightGrey">AC</button>
-          <button class="btn lightGrey">±</button>
-          <button class="btn lightGrey">%</button>
-          <button class="btn orange">÷</button>
-
-          <button class="btn darkGrey">7</button>
-          <button class="btn darkGrey">8</button>
-          <button class="btn darkGrey">9</button>
-          <button class="btn orange">x</button>
-
-          <button class="btn darkGrey">4</button>
-          <button class="btn darkGrey">5</button>
-          <button class="btn darkGrey">6</button>
-          <button class="btn orange">-</button>
-
-          <button class="btn darkGrey">1</button>
-          <button class="btn darkGrey">2</button>
-          <button class="btn darkGrey">3</button>
-          <button class="btn orange">+</button>
-
-          <button class="btn darkGrey zero">0</button>
-          <button class="btn darkGrey">00</button>
-          <button class="btn darkGrey">.</button>
-          <button class="btn orange">=</button>
-        </div>
-      </div>
-      
-      <div class="home-bar"></div>
     </div>
 
-    <script>
-      $(document).ready(function () {
-        let currentInput = "";
-        let previousInput = "";
-        let operator = "";
-        let resultDisplayed = false;
+    <div class="credit">
+      Calculator built & designed by <strong>Sem Bunly</strong>
+    </div>
 
-        function updateDisplay() {
-          if (operator && previousInput !== "") {
-            $(".display").text(
-              previousInput + " " + operator + " " + currentInput
-            );
-          } else if (currentInput !== "") {
-            $(".display").text(currentInput);
-          } else {
-            $(".display").text("0");
+    <div class="home-bar"></div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+      let currentInput = "";
+      let previousInput = "";
+      let operator = "";
+      let resultDisplayed = false;
+
+      function updateDisplay() {
+        $(".display").text(currentInput || previousInput || "0");
+      }
+
+      $(".btn").click(function () {
+        let value = $(this).text();
+
+        if (!isNaN(value) || value === ".") {
+          if (resultDisplayed) {
+            currentInput = "";
+            resultDisplayed = false;
           }
+          currentInput += value;
+          updateDisplay();
+        } else if (value === "AC") {
+          currentInput = "";
+          previousInput = "";
+          operator = "";
+          updateDisplay();
+        } else if (["+", "-", "x", "÷"].includes(value)) {
+          previousInput = currentInput;
+          operator = value;
+          currentInput = "";
+        } else if (value === "=") {
+          let a = parseFloat(previousInput);
+          let b = parseFloat(currentInput);
+          let r = 0;
+
+          if (operator === "+") r = a + b;
+          if (operator === "-") r = a - b;
+          if (operator === "x") r = a * b;
+          if (operator === "÷") r = b !== 0 ? a / b : "Error";
+
+          currentInput = r.toString();
+          previousInput = "";
+          operator = "";
+          resultDisplayed = true;
+          updateDisplay();
         }
-
-        $(".btn").click(function () {
-          let value = $(this).text();
-
-          if (!isNaN(value) || value === ".") {
-            if (resultDisplayed) {
-              currentInput = "";
-              resultDisplayed = false;
-            }
-            currentInput += value;
-            updateDisplay();
-          } else if (value === "AC") {
-            currentInput = "";
-            previousInput = "";
-            operator = "";
-            updateDisplay();
-          } else if (value === "±") {
-            if (currentInput !== "") {
-              currentInput = (parseFloat(currentInput) * -1).toString();
-              updateDisplay();
-            }
-          } else if (value === "%") {
-            if (currentInput !== "") {
-              currentInput = (parseFloat(currentInput) / 100).toString();
-              updateDisplay();
-            }
-          } else if (["+", "-", "x", "÷"].includes(value)) {
-            if (currentInput === "") return;
-            operator = value;
-            previousInput = currentInput;
-            currentInput = "";
-            updateDisplay();
-          } else if (value === "=") {
-            if (currentInput === "" || previousInput === "") return;
-            let result = 0;
-            let num1 = parseFloat(previousInput);
-            let num2 = parseFloat(currentInput);
-
-            switch (operator) {
-              case "+":
-                result = num1 + num2;
-                break;
-              case "-":
-                result = num1 - num2;
-                break;
-              case "x":
-                result = num1 * num2;
-                break;
-              case "÷":
-                result = num2 !== 0 ? num1 / num2 : "Error";
-                break;
-            }
-
-            $(".display").text(result);
-            currentInput = result.toString();
-            previousInput = "";
-            operator = "";
-            resultDisplayed = true;
-          }
-        });
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
-
