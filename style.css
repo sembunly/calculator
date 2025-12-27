@@ -49,23 +49,21 @@ body {
   color: black;
 }
 
-/* BUTTON AREA */
+/* BUTTON GRID */
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;               /* 👈 bigger space */
+  gap: 14px;
   padding: 18px;
 }
 
 /* BUTTON */
 .btn {
-  height: 72px;  
+  height: 72px;
   border-radius: 50%;
   border: none;
   font-size: 24px;
-  font-weight: 500;
   cursor: pointer;
-  transition: transform 0.1s, opacity 0.1s;
 }
 
 .btn:active {
@@ -73,7 +71,6 @@ body {
   opacity: 0.8;
 }
 
-/* COLORS */
 .lightGrey {
   background: #d4d4d2;
 }
@@ -88,7 +85,6 @@ body {
   color: white;
 }
 
-/* ZERO */
 .zero {
   grid-column: span 2;
   border-radius: 40px;
@@ -96,7 +92,6 @@ body {
   padding-left: 30px;
 }
 
-/* CREDIT */
 .credit {
   position: absolute;
   bottom: 22px;
